@@ -1,0 +1,23 @@
+.case {
+  background-color: #fcf8e3;
+}
+.confirm {
+  border-bottom: 8px solid #87ceeb;
+}
+.recover {
+  border-bottom: 8px solid #98fb98;
+}
+.death {
+  border-bottom: 8px solid red;
+}
+h1 {
+  padding: 10px;
+}
+h2,
+h3,
+h6 {
+  padding: 5px 1px 0 20px;
+}
+p {
+  padding: 5px 1px 0 30px;
+}
