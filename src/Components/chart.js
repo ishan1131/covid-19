@@ -9,20 +9,20 @@ class Graph extends Component {
           <div className="col-sm-12 chart ">
             <Bar
               options={{
+                fontSize: 50,
                 maintainAspectRatio: false,
                 legend: { display: false },
                 title: {
+                  fontSize: 18,
                   display: true,
                   text: `Current Situation in ${this.props.name}`,
                 },
               }}
               data={{
-                labels: ["Confirm", " Recover", "Death"],
+                labels: ["Confirmed", " Recovered", "Death"],
                 datasets: [
                   {
                     fill: true,
-                    label: "Cases",
-
                     borderColor: ["white"],
                     backgroundColor: [
                       "rgba(135,206,235)",

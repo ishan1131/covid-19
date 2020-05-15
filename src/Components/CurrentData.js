@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import CaseConfirmed from "./Case/CaseConfirmed";
 import CaseRecovered from "./Case/CaseRecovered";
@@ -8,124 +8,99 @@ import Button from "./Button";
 import Heading from "./Heading";
 import Footer from "./Footer";
 
-class CurrentData extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      totalData: [],
-      loading: false,
-      url: `https://covid19.mathdro.id/api/`,
-      confirmData: [],
-      totalConfirmed: "",
-      totalRecovered: "",
-      totalDeath: "",
-      date: "",
-      name: "World",
-    };
-  }
+const CurrentData = () => {
+  const [loading, setLoading] = useState(false);
+  const [url] = useState(`https://covid19.mathdro.id/api/`);
+  const [totalConfirmed, setTotalConfirmed] = useState(" ");
+  const [totalRecovered, setTotalRecovered] = useState(" ");
+  const [totalDeath, setTotalDeath] = useState(" ");
+  const [date, setDate] = useState(" ");
+  const [name, setName] = useState("World");
+  const [changeUrl, setChangeUrl] = useState(" ");
+  const [inputName, setinputName] = useState("World");
 
-  fetchData() {
-    axios(this.state.url)
+  const handleChange = (countryName) => {
+    setinputName(countryName);
+    setChangeUrl(`countries/${countryName}`);
+  };
+  const handleBlur = () => {
+    setChangeUrl(``);
+    setinputName("World");
+  };
+  const fetchData = () => {
+    axios(`${url}${changeUrl}`)
       .then((response) => {
-        this.setState({
-          date: response.data.lastUpdate,
-          totalConfirmed: response.data.confirmed.value,
-          totalRecovered: response.data.recovered.value,
-          totalDeath: response.data.deaths.value,
-          loading: true,
-        });
+        setName(inputName);
+        setDate(response.data.lastUpdate);
+        setTotalConfirmed(response.data.confirmed.value);
+        setTotalDeath(response.data.deaths.value);
+        setTotalRecovered(response.data.recovered.value);
+        setLoading(true);
       })
       .catch((error) => console.log(error));
-  }
-
-  componentDidMount() {
-    this.fetchData();
-  }
-  handleChange = (countryName) => {
-    if (countryName !== "World") {
-      axios(`https://covid19.mathdro.id/api/countries/${countryName}`)
-        .then((response) =>
-          this.setState({
-            date: response.data.lastUpdate,
-            totalConfirmed: response.data.confirmed.value,
-            totalRecovered: response.data.recovered.value,
-            totalDeath: response.data.deaths.value,
-            name: countryName,
-          })
-        )
-        .catch((error) => console.log(error));
-    } else {
-      this.setState({ name: countryName });
-      this.fetchData();
-    }
   };
+  useEffect(() => {
+    fetchData();
+  }, [changeUrl]);
 
-  render() {
-    const {
-      loading,
-      name,
-      totalConfirmed,
-      totalDeath,
-      totalRecovered,
-      date,
-    } = this.state;
-
-    return (
-      <div>
-        <div className="container">
-          <Heading />
-
-          {loading ? (
-            <div>
-              <div className="container case-container">
-                <div className="row">
-                  <div className="col-sm-4">
-                    <CaseConfirmed
-                      name={name}
-                      caseConfirmed={totalConfirmed}
-                      date={date}
-                    />
-                  </div>
-                  <div className="col-sm-4">
-                    <CaseRecovered
-                      name={name}
-                      caseRecovered={totalRecovered}
-                      date={date}
-                    />
-                  </div>
-                  <div className="col-sm-4">
-                    <CaseDeath name={name} caseDeath={totalDeath} date={date} />
-                  </div>
+  return (
+    <div>
+      <div className="container">
+        <Heading />
+        {loading ? (
+          <div>
+            <div className="container case-container">
+              <div className="row">
+                <div className="col-sm-4">
+                  <CaseConfirmed
+                    name={name}
+                    caseConfirmed={totalConfirmed}
+                    date={date}
+                  />
                 </div>
-                <div className="container ">
-                  <div className="row">
-                    <div className="col-sm-2"></div>
-                    <div className="col-sm-8">
-                      <Button handleChange={this.handleChange} />
-                    </div>
-                    <div className="col-sm-2"></div>
-                  </div>
+                <div className="col-sm-4">
+                  <CaseRecovered
+                    name={name}
+                    caseRecovered={totalRecovered}
+                    date={date}
+                  />
+                </div>
+                <div className="col-sm-4">
+                  <CaseDeath name={name} caseDeath={totalDeath} date={date} />
                 </div>
               </div>
-              <div>
-                <Graph
-                  name={name}
-                  caseConfirmedGraph={totalConfirmed}
-                  caseRecoveredGraph={totalRecovered}
-                  caseDeathGraph={totalDeath}
-                />
+              <div className="container ">
+                <div className="row">
+                  <div className="col-sm-2"></div>
+                  <div className="col-sm-8">
+                    <Button
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                    />
+                  </div>
+                  <div className="col-sm-2"></div>
+                </div>
               </div>
             </div>
-          ) : (
-            <p>Loading...</p>
-          )}
-        </div>
-        <div>
-          <br />
-          <Footer />
-        </div>
+            <div>
+              <Graph
+                name={name}
+                caseConfirmedGraph={totalConfirmed}
+                caseRecoveredGraph={totalRecovered}
+                caseDeathGraph={totalDeath}
+              />
+            </div>
+          </div>
+        ) : (
+          <p>Loading...</p>
+        )}
       </div>
-    );
-  }
-}
+      <div>
+        <br />
+        <Footer />
+      </div>
+    </div>
+  );
+};
+
 export default CurrentData;

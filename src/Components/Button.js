@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
+import "../App.css";
 
 class Button extends Component {
   constructor(props) {
@@ -7,6 +8,7 @@ class Button extends Component {
     this.state = {
       countryUrl: props.countryUrl,
       countryName: [],
+      output: [],
     };
   }
 
@@ -23,19 +25,48 @@ class Button extends Component {
 
   render() {
     return (
-      <div style={{ marginTop: 40 }}>
-        <select
-          className="form-control form-control-lg"
-          default=""
-          onChange={(e) => this.props.handleChange(e.target.value)}
+      <div className="col-sm-12">
+        <form
+          autoComplete="off"
+          onSubmit={(e) => {
+            e.preventDefault();
+            let inputValue = document.getElementById("input").value;
+            let value =
+              inputValue.charAt(0).toUpperCase() +
+              inputValue.slice(1).toLowerCase();
+            let country = this.state.countryName.map((name) => {
+              return name.name;
+            });
+            let countryIndex = country.indexOf(value);
+            if (countryIndex !== -1) {
+              this.props.handleChange(country[countryIndex]);
+            } else {
+              document.getElementById("erroeMessage").style.display = "block";
+            }
+          }}
         >
-          <option>World</option>
-          {this.state.countryName.map((name, index) => (
-            <option key={index} value={name.name}>
-              {name.name}
-            </option>
-          ))}
-        </select>
+          <center>
+            <input
+              onBlur={(e) => {
+                e.target.value = "";
+                document.getElementById("erroeMessage").style.display = "none";
+                this.props.handleBlur();
+              }}
+              onChange={() =>
+                (document.getElementById("erroeMessage").style.display = "none")
+              }
+              name="input"
+              type="text"
+              id="input"
+              required
+              placeholder="Search country..."
+            />
+          </center>
+
+          <span id="erroeMessage" style={{ display: "none" }}>
+            Please Enter valid Country
+          </span>
+        </form>
       </div>
     );
   }
