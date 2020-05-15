@@ -59,10 +59,11 @@ input[type="text"]:focus {
   width: 100%;
 }
 
-#erroeMessage {
-  height: 25px;
+#errorMessage {
+  display: none;
+  height: 28px;
   background-color: #f7f7f7;
-  width: 200px;
+  width: 250px;
   color: black;
   border-radius: 6px;
   position: absolute;
@@ -72,9 +73,10 @@ input[type="text"]:focus {
   transition: opacity 1.3s;
 }
 @media only screen and (max-width: 800px) {
-  #erroeMessage {
+  #errorMessage {
     font-size: 12px;
     height: 20px;
-    width: 140px;
+    margin-left: -100px;
+    width: 200px;
   }
 }

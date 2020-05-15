@@ -19,13 +19,10 @@ const CurrentData = () => {
   const [changeUrl, setChangeUrl] = useState(" ");
   const [inputName, setinputName] = useState("World");
 
-  const handleChange = (countryName) => {
-    setinputName(countryName);
-    setChangeUrl(`countries/${countryName}`);
-  };
   const handleBlur = () => {
     setChangeUrl(``);
     setinputName("World");
+    document.getElementById("errorMessage").style.display = "none";
   };
   const fetchData = () => {
     axios(`${url}${changeUrl}`)
@@ -37,7 +34,15 @@ const CurrentData = () => {
         setTotalRecovered(response.data.recovered.value);
         setLoading(true);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error);
+
+        document.getElementById("errorMessage").style.display = "block";
+      });
+  };
+  const handleChange = (countryName) => {
+    setinputName(countryName);
+    setChangeUrl(`countries/${countryName}`);
   };
   useEffect(() => {
     fetchData();
@@ -77,6 +82,8 @@ const CurrentData = () => {
                       handleChange={handleChange}
                       handleBlur={handleBlur}
                     />
+
+                    <p id="errorMessage">Please Enter valid Country</p>
                   </div>
                   <div className="col-sm-2"></div>
                 </div>
