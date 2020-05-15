@@ -17,7 +17,7 @@ class Graph extends Component {
                 },
               }}
               data={{
-                labels: ["Confirmed", " Recovered", "Death"],
+                labels: ["Confirm", " Recover", "Death"],
                 datasets: [
                   {
                     fill: true,
